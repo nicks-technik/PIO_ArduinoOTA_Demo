@@ -3,16 +3,24 @@
 #include <WiFiUdp.h>
 #include <ArduinoOTA.h>
 
-const char* ssid = "SSID_NAME";
-const char* password = "PASSWORD";
+#include "secure.h"
+// Here are the WLAN credentials, please uncomment or add them to "secure.h" file
+// const char* ssid = "SSID_NAME";
+// const char* password = "PASSWORD";
+
+// Values for the OTA access
+// const int myOTAPort = 8266;
+// const char *myOTAPassword = "PASSWORD";
+// const char *myOTAHostname = "HOSTNAME";
 
 //Blink LED pin
-int ledPin = 2;
+int ledPin = LED_BUILTIN;
 
 //To make Arduino software autodetect OTA device
-WiFiServer TelnetServer(8266);
+WiFiServer TelnetServer(myOTAPort);
 
-void setup() {
+void setup()
+{
   //To make Arduino software autodetect OTA device
   TelnetServer.begin();
 
@@ -20,17 +28,18 @@ void setup() {
   Serial.println("Booting...");
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, password);
-  while (WiFi.waitForConnectResult() != WL_CONNECTED) {
+  while (WiFi.waitForConnectResult() != WL_CONNECTED)
+  {
     Serial.println("Connection Failed! Rebooting...");
     delay(5000);
     ESP.restart();
   }
   // Port defaults to 8266
-  //ArduinoOTA.setPort(8266);
+  ArduinoOTA.setPort(myOTAPort);
   // Hostname defaults to esp8266-[ChipID]
-  //ArduinoOTA.setHostname("myesp8266");
+  ArduinoOTA.setHostname(myOTAHostname);
   // No authentication by default
-  //ArduinoOTA.setPassword((const char *)"xxxxx");
+  ArduinoOTA.setPassword(myOTAPassword);
 
   ArduinoOTA.onStart([]() {
     Serial.println("OTA Start");
@@ -44,14 +53,20 @@ void setup() {
   });
   ArduinoOTA.onError([](ota_error_t error) {
     Serial.printf("Error[%u]: ", error);
-    if (error == OTA_AUTH_ERROR) Serial.println("Auth Failed");
-    else if (error == OTA_BEGIN_ERROR) Serial.println("Begin Failed");
-    else if (error == OTA_CONNECT_ERROR) Serial.println("Connect Failed");
-    else if (error == OTA_RECEIVE_ERROR) Serial.println("Receive Failed");
-    else if (error == OTA_END_ERROR) Serial.println("End Failed");
+    if (error == OTA_AUTH_ERROR)
+      Serial.println("Auth Failed");
+    else if (error == OTA_BEGIN_ERROR)
+      Serial.println("Begin Failed");
+    else if (error == OTA_CONNECT_ERROR)
+      Serial.println("Connect Failed");
+    else if (error == OTA_RECEIVE_ERROR)
+      Serial.println("Receive Failed");
+    else if (error == OTA_END_ERROR)
+      Serial.println("End Failed");
   });
   ArduinoOTA.begin();
   Serial.println("Ready");
+
   Serial.print("IP address: ");
   Serial.println(WiFi.localIP());
 
@@ -59,7 +74,8 @@ void setup() {
   pinMode(ledPin, OUTPUT);
 }
 
-void loop() {
+void loop()
+{
   ArduinoOTA.handle();
 
   //Make LED blink
