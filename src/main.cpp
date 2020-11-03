@@ -8,7 +8,7 @@
 // const char* ssid = "SSID_NAME";
 // const char* password = "PASSWORD";
 
-// Values for the OTA access
+// Values for the OTA access, please uncomment or add them to "secure.h" file
 // const int myOTAPort = 8266;
 // const char *myOTAPassword = "PASSWORD";
 // const char *myOTAHostname = "HOSTNAME";
