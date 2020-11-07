@@ -34,6 +34,10 @@ void setup()
     delay(5000);
     ESP.restart();
   }
+
+  Serial.print("IP address: ");
+  Serial.println(WiFi.localIP());
+
   // Port defaults to 8266
   ArduinoOTA.setPort(myOTAPort);
   // Hostname defaults to esp8266-[ChipID]
@@ -67,15 +71,13 @@ void setup()
   ArduinoOTA.begin();
   Serial.println("Ready");
 
-  Serial.print("IP address: ");
-  Serial.println(WiFi.localIP());
-
   //set LED pin as output
   pinMode(ledPin, OUTPUT);
 }
 
 void loop()
 {
+  // Check if OTA is needed
   ArduinoOTA.handle();
 
   //Make LED blink
@@ -84,3 +86,9 @@ void loop()
   digitalWrite(ledPin, LOW);
   delay(250);
 }
+
+
+
+
+
+
